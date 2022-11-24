@@ -7,10 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -35,8 +33,22 @@ public class MovieRepository {
 
     @Transactional
     public void delete(Long id){
+        // LE CACHE DE 1er NIVEAU PERMET, SI ONT REPETE LE FIND() ICI, DE NE FAIRE QU'UN SELECT
         Movie movie = entityManager.find(Movie.class, id);
         entityManager.remove(movie);
+    }
+    @Transactional
+    public Movie getReference(Long id){
+        // RECUPERE UNE REFERENCE CHARGEABLE A LA DEMANDE DE LA SESSION
+        Movie movie = entityManager.getReference(Movie.class, id);
+        LOGGER.trace("MOVIE NAME:  " + movie.getName());
+        return movie;
+    }
+    public Movie getReference2(Long id){
+        //DES CHOSES SE PASSENT
+        //AH OUI, ESSAI DES ASSERT THROWS / LAZY EXCEPTION
+        //ÇA SERT A RIEN SINON
+        return entityManager.getReference(Movie.class, id);
     }
 
 //    PAS BESOIN DE TRANSACTION CAR AUCUNE MODIF EN BDD
