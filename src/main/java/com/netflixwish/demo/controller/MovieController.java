@@ -2,49 +2,40 @@ package com.netflixwish.demo.controller;
 
 import com.netflixwish.demo.entity.Movie;
 import com.netflixwish.demo.repository.MovieRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/movie")
 public class MovieController {
-    private final MovieRepository repository;
 
-    public MovieController(MovieRepository repository) {
-        this.repository = repository;
+    @Autowired
+    private MovieRepository repository;
+
+    @PostMapping("/")
+    public Movie create(@RequestBody Movie movie){
+        repository.persist(movie);
+        return movie;
     }
 
-    @GetMapping("/movies")
-    List<Movie> all(){
-        return repository.findAll();
+    @GetMapping("/{id}")
+    public ResponseEntity<Movie> get(@PathVariable Long id){
+        Movie movie = repository.find(id);
+        return movie != null ? ResponseEntity.ok(movie) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/movies")
-    Movie newMovie(@RequestBody Movie newMovie){
-        return repository.persist(newMovie);
+    @PutMapping("/update")
+    public ResponseEntity<Movie> update(@RequestBody Movie movie){
+        Optional<Movie> result = repository.updateMovie(movie);
+        return result.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(result.get());
     }
 
-    @GetMapping("/movie/{id}")
-    Movie movie(@PathVariable Long id){
-        return repository.find(id);
-    }
-
-    @PutMapping("/movies/{id}")
-    Movie updateMovie(@RequestBody Movie newMovie, @PathVariable Long id){
-        return repository.find(id)
-                .map(movie -> {
-                    movie.setName(newMovie.getName());
-                    movie.setDescription(newMovie.getDescription());
-                    return repository.persist(movie);
-                })
-                .orElseGet(() -> {
-                    newMovie.setId(id);
-                    return repository.persist(newMovie);
-                });
-    }
-
-    @DeleteMapping("/movies/{id}")
-    void deleteMovie(@PathVariable Long id){
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable Long id){
         repository.delete(id);
     }
 

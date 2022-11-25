@@ -8,8 +8,10 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MovieRepository {
@@ -21,14 +23,22 @@ public class MovieRepository {
 //     ou même pour faire des requêtes via nos entités
     @Transactional
     public void persist(Movie movie){
-        LOGGER.trace("EM : " + entityManager.contains(movie));
+//        LOGGER.trace("EM : " + entityManager.contains(movie));
         entityManager.persist(movie);
-        LOGGER.trace("EM : " + entityManager.contains(movie));
+//        LOGGER.trace("EM : " + entityManager.contains(movie));
     }
 
     @Transactional
-    public Movie updateMovie(Movie movie){
-        return entityManager.merge(movie);
+    public Optional<Movie> updateMovie(Movie movie){
+        if(movie.getId() == null){
+            return Optional.empty();
+        }
+        Movie updatedMovie = entityManager.find(Movie.class, movie.getId());
+        if(updatedMovie != null){
+            updatedMovie.setName(movie.getName());
+            updatedMovie.setDescription(movie.getDescription());
+        }
+        return Optional.ofNullable(updatedMovie);
     }
 
     @Transactional

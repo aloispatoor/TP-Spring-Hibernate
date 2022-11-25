@@ -49,17 +49,17 @@ public class MovieRepositoryTest {
         movies.forEach(System.out::println);
     }
 
-    @Test
-    public void edit_nominalCase(){
-        Movie existingMovie = new Movie();
-
-        existingMovie.setId(-1L);
-        existingMovie.setName("Silent Hill");
-
-        Movie updatedMovie = repository.updateMovie(existingMovie);
-        assertThat(updatedMovie.getName()).as("Movie not found").isEqualTo("Silent Hill");
-        System.out.println(updatedMovie.getName());
-    }
+//    @Test
+//    public void edit_nominalCase(){
+//        Movie existingMovie = new Movie();
+//
+//        existingMovie.setId(-1L);
+//        existingMovie.setName("Silent Hill");
+//
+//        Movie updatedMovie = repository.updateMovie(existingMovie);
+//        assertThat(updatedMovie.getName()).as("Movie not found").isEqualTo("Silent Hill");
+//        System.out.println(updatedMovie.getName());
+//    }
 
     @Test
     public void delete_nominalCase(){
