@@ -24,7 +24,7 @@ public class PersistenceConfigTest {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSourceH2());
-        em.setPackagesToScan(new String[] { "com.netflixwish.demo.entity" });
+        em.setPackagesToScan(new String[] { "com.netflixwish.demo.entity", "com.netflixwish.demo.converter" });
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

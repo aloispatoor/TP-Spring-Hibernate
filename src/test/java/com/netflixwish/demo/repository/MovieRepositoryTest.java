@@ -2,6 +2,7 @@ package com.netflixwish.demo.repository;
 
 import com.netflixwish.demo.config.PersistenceConfigTest;
 import com.netflixwish.demo.entity.Movie;
+import com.netflixwish.demo.entity.Certification;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,5 +84,20 @@ public class MovieRepositoryTest {
             Movie movie = repository.getReference2(-2L);
             LOGGER.trace("MOVIE NAME:  " + movie.getName());
         }, "Didn't get the right exception");
+    }
+
+    @Test
+    public void save_nominalCase2(){
+        Movie movie = new Movie();
+        movie.setName("aaaa");
+        movie.setDescription("Ils se sont pas foulés pour le nom");
+        movie.setCertification(Certification.INTERDIT_MOINS_12);
+        repository.persist(movie);
+    }
+
+    @Test
+    public void find_nominalCase2(){
+        Movie movie = repository.find(-2L);
+        assertThat(movie.getCertification()).as("Pas le bon film").isEqualTo(Certification.INTERDIT_MOINS_18);
     }
 }

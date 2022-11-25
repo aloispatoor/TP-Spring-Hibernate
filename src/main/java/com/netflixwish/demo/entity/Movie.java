@@ -1,11 +1,7 @@
 package com.netflixwish.demo.entity;
 
 
-import javax.annotation.Generated;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Movie {
@@ -13,8 +9,20 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+//    @Column(unique = true, nullable = false)
+    // CONTRAINTES EN BDD
     private String name;
     private String description;
+    @Enumerated
+    private Certification certification;
+
+    public Certification getCertification() {
+        return certification;
+    }
+
+    public void setCertification(Certification certification) {
+        this.certification = certification;
+    }
 
     public String getDescription() {
         return description;

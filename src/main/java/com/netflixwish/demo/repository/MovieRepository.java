@@ -42,11 +42,18 @@ public class MovieRepository {
     }
 
     @Transactional
-    public void delete(Long id){
-        // LE CACHE DE 1er NIVEAU PERMET, SI ONT REPETE LE FIND() ICI, DE NE FAIRE QU'UN SELECT
-        Movie movie = entityManager.find(Movie.class, id);
-        entityManager.remove(movie);
+    public boolean delete(Long id){
+        boolean result = false;
+        if(id != null){
+            Movie movie = entityManager.find(Movie.class, id);
+            if(movie != null){
+                entityManager.remove(movie);
+                return true;
+            }
+        }
+        return result;
     }
+
     @Transactional
     public Movie getReference(Long id){
         // RECUPERE UNE REFERENCE CHARGEABLE A LA DEMANDE DE LA SESSION
